@@ -16,23 +16,10 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Navbar</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" id="add" href="#"><i class="fas fa-plus"></i></a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+  <header class="container-flex bg-light p-2 d-flex align-items-center">
+    <h1>Library</h1>
+    <a class="nav-link" id="add" href="#">Add <i class="fas fa-plus"></i></a>
+  </header>
 
   <div class="d-flex flex-row flex-wrap m-2" id="bookDemo">
   </div>
@@ -53,7 +40,7 @@
         <input type="number" class="form-control" id="pages" min="1" max="5000" required>
       </div>
       <div class="form-group my-2">
-        <select class="form-control form-control-sm">
+        <select id="status" class="form-control form-control-sm">
           <option disabled selected value>Select an option</option>
           <option value="read">read</option>
           <option value="unread">unread</option>
