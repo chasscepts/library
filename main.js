@@ -1,61 +1,28 @@
-function Book(title, author, pages, status) {
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.status = status;
-}
-
-const newBookForm = document.getElementById('show-form');
-const addbtn = document.getElementById('add');
-addbtn.onclick = () => {
-  newBookForm.style.display = 'block';
-  newBookForm.classList.add('overlay');
-};
+let myLibrary = [];
 
 const storage = (() => {
   const save = (list) => localStorage.setItem('data', JSON.stringify(list));
   const get = () => localStorage.getItem('data');
-  const getAll = () => JSON.parse(get());
-  if (!get()) {
-    save([]);
+
+  let books = [];
+  if (get()) {
+    books = JSON.parse(get());
   }
 
   return {
-    getAll,
+    getAll: () => [...books],
     saveBook: (book) => {
-      const data = getAll();
-      data.push(book);
-      save(data);
+      books.push(book);
+      save(books);
     },
     deleteBook: (index) => {
-      const data = storage.getAll();
-      data.splice(index, 1);
-      save(data);
+      books.splice(index, 1);
+      save(books);
     },
     changeStatus: (index) => {
-      const list = storage.getAll();
-      list[index].status = list[index].status === 'read' ? 'unread' : 'read';
-      save(list);
-    },
-  };
-})();
-
-const formData = (() => {
-  const form = document.getElementById('show-form');
-  return {
-    createbook: () => {
-      const title = form.querySelector('#title').value;
-      const author = form.querySelector('#author').value;
-      const pages = form.querySelector('#pages').value;
-      const status = form.querySelector('#status').value;
-      return new Book(title, author, pages, status);
-    },
-    close: () => {
-      form.querySelector('#title').value = '';
-      form.querySelector('#author').value = '';
-      form.querySelector('#pages').value = '';
-      form.querySelector('#status').value = '';
-      form.style.display = 'none';
+      const book = books[index];
+      book.status = book.status === 'read' ? 'unread' : 'read';
+      save(books);
     },
   };
 })();
@@ -84,15 +51,55 @@ const addBookCard = (book, idx) => {
 
 const reload = () => {
   document.querySelector('#bookDemo').innerHTML = '';
-  storage.getAll().forEach((book, idx) => {
+  myLibrary = storage.getAll();
+  myLibrary.forEach((book, idx) => {
     addBookCard(book, idx);
   });
 };
 
+function Book(title, author, pages, status) {
+  this.title = title;
+  this.author = author;
+  this.pages = pages;
+  this.status = status;
+}
+
+function addBookToLibrary(book) {
+  storage.saveBook(book);
+}
+
+const newBookForm = document.getElementById('show-form');
+const addbtn = document.getElementById('add');
+
+addbtn.onclick = () => {
+  newBookForm.style.display = 'block';
+  newBookForm.classList.add('overlay');
+};
+
+const formData = (() => {
+  const form = document.getElementById('show-form');
+  return {
+    createbook: () => {
+      const title = form.querySelector('#title').value;
+      const author = form.querySelector('#author').value;
+      const pages = form.querySelector('#pages').value;
+      const status = form.querySelector('#status').value;
+      return new Book(title, author, pages, status);
+    },
+    close: () => {
+      form.querySelector('#title').value = '';
+      form.querySelector('#author').value = '';
+      form.querySelector('#pages').value = '';
+      form.querySelector('#status').value = '';
+      form.style.display = 'none';
+    },
+  };
+})();
+
 newBookForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const book = formData.createbook();
-  storage.saveBook(book);
+  addBookToLibrary(book);
   addBookCard(book);
   formData.close();
   reload();
